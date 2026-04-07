@@ -2,18 +2,22 @@
 set -e
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-VENV_DIR="$PLUGIN_DIR/.venv"
 
 echo "==> Installing stock-dividend-plugin..."
 
-# 建立 venv 並安裝依賴
-echo "==> Setting up Python virtual environment..."
-python3 -m venv "$VENV_DIR"
-"$VENV_DIR/bin/pip" install -q -r "$PLUGIN_DIR/mcp-server/requirements.txt"
+# 確認 uv 已安裝
+if ! command -v uv &> /dev/null; then
+    echo "Error: 'uv' is required. Install it from https://docs.astral.sh/uv/getting-started/installation/"
+    exit 1
+fi
 
-# 註冊 MCP server（使用 venv 的 python）
+# 註冊 MCP server
 echo "==> Registering MCP server..."
-claude mcp add stock-dividend-mcp -- "$VENV_DIR/bin/python3" "$PLUGIN_DIR/mcp-server/server.py"
+claude mcp add stock-dividend-mcp -- uv run \
+    --with mcp \
+    --with yfinance \
+    --with pandas \
+    "$PLUGIN_DIR/mcp-server/server.py"
 
 echo ""
 echo "✓ Installation complete!"
