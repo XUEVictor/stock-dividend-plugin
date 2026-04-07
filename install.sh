@@ -2,16 +2,18 @@
 set -e
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_DIR="$PLUGIN_DIR/.venv"
 
 echo "==> Installing stock-dividend-plugin..."
 
-# 安裝 Python 依賴
-echo "==> Installing Python dependencies..."
-pip3 install -r "$PLUGIN_DIR/mcp-server/requirements.txt"
+# 建立 venv 並安裝依賴
+echo "==> Setting up Python virtual environment..."
+python3 -m venv "$VENV_DIR"
+"$VENV_DIR/bin/pip" install -q -r "$PLUGIN_DIR/mcp-server/requirements.txt"
 
-# 註冊 MCP server（全域）
+# 註冊 MCP server（使用 venv 的 python）
 echo "==> Registering MCP server..."
-claude mcp add stock-dividend-mcp -- python3 "$PLUGIN_DIR/mcp-server/server.py"
+claude mcp add stock-dividend-mcp -- "$VENV_DIR/bin/python3" "$PLUGIN_DIR/mcp-server/server.py"
 
 echo ""
 echo "✓ Installation complete!"
