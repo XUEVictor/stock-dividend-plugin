@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "stock-dividend-mcp": {
+      "command": "python3",
+      "args": ["mcp-server/server.py"]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "stock-dividend",
+  "description": "台股除權息回填分析：自動查詢除權息日期、判斷回填狀況、產生分析報告",
+  "version": "1.0.0",
+  "author": {
+    "name": "monica"
+  }
+}
